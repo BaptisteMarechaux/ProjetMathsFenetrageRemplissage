@@ -2,7 +2,7 @@
 
 #include "Clipping.h"
 #include "Shape.h"
-#include <glm\glm.hpp>
+#include "libs\glm\glm.hpp"
 #include <iostream>
 
 bool visible(const glm::vec2& checkedPoint, const glm::vec2& windowPointA, const glm::vec2& windowPointB) {

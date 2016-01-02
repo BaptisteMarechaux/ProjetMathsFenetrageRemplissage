@@ -1,6 +1,6 @@
 #pragma once
 
-#include <glm\glm.hpp>
+#include "libs\glm\glm.hpp"
 
 bool visible(const glm::vec2& checkedPoint, const glm::vec2& windowPointA, const glm::vec2& windowPointB);
 

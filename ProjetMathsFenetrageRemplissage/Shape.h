@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Point.h"
-#include<glm/glm.hpp>
+#include "libs\glm\glm.hpp"
 #include <vector>
 
 
