@@ -7,6 +7,7 @@
 #include <iostream>
 
 #include "Draw.h"
+#include "Filling.h"
 
 GLint mousex;
 GLint mousey;
@@ -21,14 +22,19 @@ int indexWinMode=0;
 int mode; // 1 = Poly
 bool fillPoly = false;
 
-struct Point
+/*struct _Point
 {
-	float x;
-	float y;
+	GLint x, y;
 };
 
-vector<Point> polyPoints;
-vector<Point> winPoints;
+class PointArray
+{
+public:
+	vector<_Point> points;
+};*/
+
+PointArray poly;
+PointArray win;
 
 int polyColor = 0;
 int winColor = 0;
@@ -87,7 +93,7 @@ void edgedetect(float x1, float y1, float x2, float y2, int *le, int *re)
 	}
 }
 
-void scanfill(vector<Point> pois)
+void scanfill(vector<_Point> pois)
 {
 	int le[1000], re[1000], i, j;
 
@@ -129,29 +135,29 @@ void Render()
 	switch (indexPolyMode) {
 		case 1:
 			glBegin(GL_POINTS);
-			for (int i = 0; i < polyPoints.size(); i++) {
-				glVertex2i(polyPoints[i].x, polyPoints[i].y);
+			for (int i = 0; i < poly.points.size(); i++) {
+				glVertex2i(poly.points[i].x, poly.points[i].y);
 			}
 			glEnd();
 			break;
 
 		case 2:
 			glBegin(GL_LINE_STRIP);
-			for (int i = 0; i < polyPoints.size(); i++) {
-				glVertex2i(polyPoints[i].x, polyPoints[i].y);
+			for (int i = 0; i < poly.points.size(); i++) {
+				glVertex2i(poly.points[i].x, poly.points[i].y);
 			}
 			glEnd();
 			break;
 
 		case 3:
 			glBegin(GL_LINE_LOOP);
-			for (int i = 0; i < polyPoints.size(); i++) {
-				glVertex2i(polyPoints[i].x, polyPoints[i].y);
+			for (int i = 0; i < poly.points.size(); i++) {
+				glVertex2i(poly.points[i].x, poly.points[i].y);
 			}
 			glEnd();
 			/*glBegin(GL_POINTS);
-			for (int i = 0; i < polyPoints.size(); i++) {
-				glVertex2i(polyPoints[i].x, polyPoints[i].y);
+			for (int i = 0; i < poly.points.size(); i++) {
+				glVertex2i(poly.points[i].x, poly.points[i].y);
 			}*/
 			glEnd();
 			break;
@@ -175,29 +181,29 @@ void Render()
 	switch (indexWinMode) {
 	case 1:
 		glBegin(GL_POINTS);
-		for (int i = 0; i < winPoints.size(); i++) {
-			glVertex2i(winPoints[i].x, winPoints[i].y);
+		for (int i = 0; i < win.points.size(); i++) {
+			glVertex2i(win.points[i].x, win.points[i].y);
 		}
 		glEnd();
 		break;
 
 	case 2:
 		glBegin(GL_LINE_STRIP);
-		for (int i = 0; i < winPoints.size(); i++) {
-			glVertex2i(winPoints[i].x, winPoints[i].y);
+		for (int i = 0; i < win.points.size(); i++) {
+			glVertex2i(win.points[i].x, win.points[i].y);
 		}
 		glEnd();
 		break;
 
 	case 3:
 		glBegin(GL_LINE_LOOP);
-		for (int i = 0; i < winPoints.size(); i++) {
-			glVertex2i(winPoints[i].x, winPoints[i].y);
+		for (int i = 0; i < win.points.size(); i++) {
+			glVertex2i(win.points[i].x, win.points[i].y);
 		}
 		glEnd();
 		/*glBegin(GL_POINTS);
-		for (int i = 0; i < winPoints.size(); i++) {
-			glVertex2i(winPoints[i].x, winPoints[i].y);
+		for (int i = 0; i < win.points.size(); i++) {
+			glVertex2i(win.points[i].x, win.points[i].y);
 		}
 		glEnd();*/
 		break;
@@ -207,9 +213,11 @@ void Render()
 	}
 
 	if (fillPoly) {
-		if (polyPoints.size() >= 4)
-			scanfill(polyPoints);
-			//scanfill(polyPoints[0].x, polyPoints[0].y, polyPoints[1].x, polyPoints[1].y, polyPoints[2].x, polyPoints[2].y, polyPoints[3].x, polyPoints[3].y, polyPoints[4].x, polyPoints[4].y);
+		if (poly.points.size() >= 3) {
+			colorType fillC = { 1.0f,0.0f,0.0f };
+			Fill(poly, fillC);
+			//scanfill(poly.points);
+		}
 	}
 
 	glFlush();
@@ -223,17 +231,17 @@ void mouse(int button, int state, int x, int y)
 		mousex = x;
 		mousey = y;
 		std::cout << x << " " << y << "\n";
-		Point tmpPoint;
+		_Point tmpPoint;
 		tmpPoint.x = mousex;
 		tmpPoint.y = mousey;
 		if(mode == 1)
-			polyPoints.push_back(tmpPoint);
+			poly.points.push_back(tmpPoint);
 		else
 		{
-			winPoints.push_back(tmpPoint);
+			win.points.push_back(tmpPoint);
 		}
 
-		std::cout << polyPoints.size();
+		std::cout << poly.points.size();
 	}
 }
 
@@ -298,7 +306,7 @@ void polyCut_menu(int option) {
 		indexPolyMode = 3;
 		break;
 	}
-	polyPoints.clear();
+	poly.points.clear();
 	mode = 1;
 	glutPostRedisplay();
 }
@@ -316,7 +324,7 @@ void winLay_menu(int option) {
 		indexWinMode = 3;
 		break;
 	}
-	winPoints.clear();
+	win.points.clear();
 	mode = 2;
 	glutPostRedisplay();
 }
@@ -325,8 +333,8 @@ void option_menu(int option) {
 
 	switch (option) {
 	case 1:
-		polyPoints.clear();
-		winPoints.clear();
+		poly.points.clear();
+		win.points.clear();
 		indexPolyMode = 0;
 		indexWinMode = 0;
 		break;
