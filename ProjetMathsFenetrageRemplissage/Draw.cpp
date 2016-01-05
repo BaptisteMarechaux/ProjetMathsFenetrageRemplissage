@@ -41,9 +41,19 @@ int winColor = 0;
 
 float x1, x2, x3, x4, y5, y2, y3, y4;
 
+struct Circle
+{
+	GLint x, y;
+	GLfloat radius;
+};
+
+Circle circle;
+
+int drawCircleMode = 0;
+
 void Initialize() 
 {
-	glClearColor(1.0, 1.0, 1.0, 0.0);
+	glClearColor(1.0, 0.984, 0.906, 0.961);
 	glColor3f(0.0f, 0.0f, 1.0f);
 	glPointSize(2.0);			
 	glMatrixMode(GL_PROJECTION);	
@@ -64,6 +74,31 @@ void draw_pixel(int x, int y)
 	glPointSize(1.0);
 	glBegin(GL_POINTS);
 	glVertex2i(x, y);
+	glEnd();
+}
+
+void DrawCircle(float cx, float cy, float r, int num_segments)
+{
+	http://slabode.exofire.net/circle_draw.shtml
+
+	float theta = 2 * 3.1415926 / float(num_segments);
+	float c = cosf(theta);//precalculate the sine and cosine
+	float s = sinf(theta);
+	float t;
+
+	float x = r;//we start at angle = 0 
+	float y = 0;
+
+	glBegin(GL_LINE_LOOP);
+	for (int ii = 0; ii < num_segments; ii++)
+	{
+		glVertex2f(x + cx, y + cy);//output vertex 
+
+								   //apply the rotation matrix
+		t = x;
+		x = c * x - s * y;
+		y = s * t + c * y;
+	}
 	glEnd();
 }
 
@@ -220,6 +255,15 @@ void Render()
 		}
 	}
 
+	if (drawCircleMode == 3) {
+		DrawCircle(circle.x, circle.y, circle.radius, 40);
+		if (fillPoly) {
+			glColor4f(1.0, 1.0, 0.0, 1.0);
+			FillCircle(circle.x, circle.y, circle.radius);
+		}	
+	}
+	//FillCircle(50, 50, 50);
+
 	glFlush();
 }
 
@@ -239,6 +283,19 @@ void mouse(int button, int state, int x, int y)
 		else
 		{
 			win.points.push_back(tmpPoint);
+		}
+		if (drawCircleMode == 1) {
+			circle.x = mousex;
+			circle.y = mousey;
+			drawCircleMode++;
+		}
+		else
+		{
+			if(drawCircleMode == 2){
+				circle.radius = sqrt((mousex - circle.x)*(mousex - circle.x) + (mousey - circle.y)*(mousey - circle.y));
+				drawCircleMode++;
+				std::cout << "ok";
+			}
 		}
 
 		std::cout << poly.points.size();
@@ -305,6 +362,9 @@ void polyCut_menu(int option) {
 	case 3:
 		indexPolyMode = 3;
 		break;
+	case 4:
+		drawCircleMode = 1;
+		break;
 	}
 	poly.points.clear();
 	mode = 1;
@@ -365,6 +425,7 @@ void initMenu() {
 	glutAddMenuEntry("Point", 1);
 	glutAddMenuEntry("Line", 2);
 	glutAddMenuEntry("Polygon", 3);
+	glutAddMenuEntry("Circle", 4);
 
 	winLayMenu = glutCreateMenu(winLay_menu);
 	glutAddMenuEntry("Point", 1);
@@ -390,3 +451,4 @@ void initMenu() {
 void _CreateWindow() {
 	Win = glutCreateWindow("Window");
 }
+

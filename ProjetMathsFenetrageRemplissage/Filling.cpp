@@ -197,3 +197,25 @@ void Fill(PointArray P, colorType c)
 }
 
 
+# define PI           3.14159265358979323846
+void FillCircle(GLfloat centerX, GLfloat centerY, GLfloat radius)
+{
+	int i;
+	int triangleAmount = 1000;
+	GLfloat twicePi = 2.0f * PI;
+
+	glEnable(GL_LINE_SMOOTH);
+	glLineWidth(5.0);
+
+	glBegin(GL_LINES);
+	for (i = 0; i <= triangleAmount; i++)
+	{
+		glVertex2f(centerX, centerY);
+		glVertex2f(centerX + (radius * cos(i * twicePi / triangleAmount)), centerY + (radius * sin(i * twicePi / triangleAmount)));
+	}
+	glEnd();
+
+	glDisable(GL_LINE_SMOOTH);
+}
+
+

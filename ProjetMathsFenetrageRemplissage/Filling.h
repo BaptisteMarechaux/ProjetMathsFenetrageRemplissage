@@ -21,3 +21,5 @@ public:
 
 void Fill(PointArray P, colorType c);
 
+void FillCircle(GLfloat centerX, GLfloat centerY, GLfloat radius);
+
