@@ -1,36 +1,24 @@
-﻿Build started 06/01/2016 00:18:22.
-     1>Project "C:\Users\Julien Geiger\Documents\ESGI\Documents 4A\Maths\Projet_MathsFenetrageRemplissage\ProjetMathsFenetrageRemplissage\ProjetMathsFenetrageRemplissage.vcxproj" on node 2 (Build target(s)).
-     1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt Draw.cpp
-         Draw.cpp
-     1>c:\users\julien geiger\documents\esgi\documents 4a\maths\projet_mathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(56): warning C4305: 'argument': truncation from 'double' to 'GLclampf'
-     1>c:\users\julien geiger\documents\esgi\documents 4a\maths\projet_mathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(84): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-     1>c:\users\julien geiger\documents\esgi\documents 4a\maths\projet_mathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(82): warning C4102: 'http': unreferenced label
-     1>c:\users\julien geiger\documents\esgi\documents 4a\maths\projet_mathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(139): warning C4018: '<': signed/unsigned mismatch
-     1>c:\users\julien geiger\documents\esgi\documents 4a\maths\projet_mathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(141): warning C4244: 'argument': conversion from 'GLint' to 'float', possible loss of data
-     1>c:\users\julien geiger\documents\esgi\documents 4a\maths\projet_mathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(144): warning C4244: 'argument': conversion from 'GLint' to 'float', possible loss of data
-     1>c:\users\julien geiger\documents\esgi\documents 4a\maths\projet_mathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(173): warning C4018: '<': signed/unsigned mismatch
-     1>c:\users\julien geiger\documents\esgi\documents 4a\maths\projet_mathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(181): warning C4018: '<': signed/unsigned mismatch
-     1>c:\users\julien geiger\documents\esgi\documents 4a\maths\projet_mathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(189): warning C4018: '<': signed/unsigned mismatch
-     1>c:\users\julien geiger\documents\esgi\documents 4a\maths\projet_mathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(219): warning C4018: '<': signed/unsigned mismatch
-     1>c:\users\julien geiger\documents\esgi\documents 4a\maths\projet_mathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(227): warning C4018: '<': signed/unsigned mismatch
-     1>c:\users\julien geiger\documents\esgi\documents 4a\maths\projet_mathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(235): warning C4018: '<': signed/unsigned mismatch
-     1>c:\users\julien geiger\documents\esgi\documents 4a\maths\projet_mathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(259): warning C4244: 'argument': conversion from 'GLint' to 'float', possible loss of data
-     1>c:\users\julien geiger\documents\esgi\documents 4a\maths\projet_mathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(262): warning C4244: 'argument': conversion from 'GLint' to 'GLfloat', possible loss of data
-     1>c:\users\julien geiger\documents\esgi\documents 4a\maths\projet_mathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(295): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
-     1>c:\users\julien geiger\documents\esgi\documents 4a\maths\projet_mathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(417): warning C4101: 'winWingMenu': unreferenced local variable
-     1>c:\users\julien geiger\documents\esgi\documents 4a\maths\projet_mathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(417): warning C4101: 'fillMenu': unreferenced local variable
-       Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Julien Geiger\Documents\ESGI\Documents 4A\Maths\Projet_MathsFenetrageRemplissage\Debug\ProjetMathsFenetrageRemplissage.exe" /INCREMENTAL /NOLOGO /LIBPATH:C:\Users\Baptiste\Documents\GitHub\ProjetMathsFenetrageRemplissage\ProjetMathsFenetrageRemplissage\libs kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"C:\Users\Julien Geiger\Documents\ESGI\Documents 4A\Maths\Projet_MathsFenetrageRemplissage\Debug\ProjetMathsFenetrageRemplissage.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Julien Geiger\Documents\ESGI\Documents 4A\Maths\Projet_MathsFenetrageRemplissage\Debug\ProjetMathsFenetrageRemplissage.lib" /MACHINE:X86 Debug\Clipping.obj
-         Debug\Draw.obj
-         Debug\Filling.obj
-         Debug\Point.obj
-         Debug\ProjetMathsFenetrageRemplissage.obj
-         Debug\Shape.obj
-         Debug\stdafx.obj
-         ProjetMathsFenetrageRemplissage.vcxproj -> C:\Users\Julien Geiger\Documents\ESGI\Documents 4A\Maths\Projet_MathsFenetrageRemplissage\Debug\ProjetMathsFenetrageRemplissage.exe
-     1>Done Building Project "C:\Users\Julien Geiger\Documents\ESGI\Documents 4A\Maths\Projet_MathsFenetrageRemplissage\ProjetMathsFenetrageRemplissage\ProjetMathsFenetrageRemplissage.vcxproj" (Build target(s)).
-
-Build succeeded.
-
-Time Elapsed 00:00:02.62
+﻿  Draw.cpp
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(65): warning C4305: 'argument': truncation from 'double' to 'GLclampf'
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(93): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(91): warning C4102: 'http': unreferenced label
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(148): warning C4018: '<': signed/unsigned mismatch
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(150): warning C4244: 'argument': conversion from 'GLint' to 'float', possible loss of data
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(153): warning C4244: 'argument': conversion from 'GLint' to 'float', possible loss of data
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(182): warning C4018: '<': signed/unsigned mismatch
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(190): warning C4018: '<': signed/unsigned mismatch
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(198): warning C4018: '<': signed/unsigned mismatch
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(228): warning C4018: '<': signed/unsigned mismatch
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(236): warning C4018: '<': signed/unsigned mismatch
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(244): warning C4018: '<': signed/unsigned mismatch
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(268): warning C4244: 'argument': conversion from 'GLint' to 'float', possible loss of data
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(271): warning C4244: 'argument': conversion from 'GLint' to 'GLfloat', possible loss of data
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(279): warning C4018: '<': signed/unsigned mismatch
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(314): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(372): warning C4018: '<': signed/unsigned mismatch
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(374): warning C4244: '=': conversion from 'float' to 'GLint', possible loss of data
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(375): warning C4244: '=': conversion from 'float' to 'GLint', possible loss of data
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(377): warning C4244: 'argument': conversion from 'float' to 'GLint', possible loss of data
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(463): warning C4101: 'winWingMenu': unreferenced local variable
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(463): warning C4101: 'fillMenu': unreferenced local variable
+  ProjetMathsFenetrageRemplissage.vcxproj -> C:\Users\Baptiste\Documents\GitHub\ProjetMathsFenetrageRemplissage\Debug\ProjetMathsFenetrageRemplissage.exe

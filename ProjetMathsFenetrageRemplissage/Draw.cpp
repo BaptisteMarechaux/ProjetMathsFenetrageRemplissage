@@ -1,4 +1,6 @@
 // C, standard, dio
+#pragma once
+
 #include <cstdio>
 #include <cstdint>
 
@@ -8,6 +10,11 @@
 
 #include "Draw.h"
 #include "Filling.h"
+
+#include "libs\glm\glm.hpp"
+#include "Clipping.h"
+
+#include <vector>
 
 GLint mousex;
 GLint mousey;
@@ -21,6 +28,8 @@ int indexPolyMode=0;
 int indexWinMode=0;
 int mode; // 1 = Poly
 bool fillPoly = false;
+
+bool clipPoly = false;
 
 /*struct _Point
 {
@@ -262,6 +271,16 @@ void Render()
 			FillCircle(circle.x, circle.y, circle.radius);
 		}	
 	}
+
+	if (clipPoly) {
+
+		glColor3f(1.0f, 0.0f, 1.0f);
+		glBegin(GL_LINE_STRIP);
+		for (int i = 0; i < poly.points.size(); i++) {
+			glVertex2i(poly.points[i].x, poly.points[i].y);
+		}
+		glEnd();
+	}
 	//FillCircle(50, 50, 50);
 
 	glFlush();
@@ -327,12 +346,39 @@ void keyboard(unsigned char key, int xmouse, int ymouse)
 }
 
 void processMenuEvents(int option) {
-
+	std::vector<glm::vec2> s = std::vector<glm::vec2>();
+	std::vector<glm::vec2> f = std::vector<glm::vec2>();
 	switch (option) {
 	case 0:
 		glutDestroyWindow(Win);
 		exit(0);
 		break;
+
+	case 1:
+		
+		for (unsigned int i = 0; i < poly.points.size(); i++) {
+			s.push_back(glm::vec2(poly.points[i].x, poly.points[i].y)); //filling shape array
+		}
+		for (unsigned int i = 0; i < win.points.size(); i++) {
+			f.push_back(glm::vec2(win.points[i].x, win.points[i].y)); //filling windowarray
+		}
+		
+		s = maskInWindow(s, f);
+
+		_Point tmpPoint;
+
+		poly.points = std::vector<_Point>();
+
+		for (int i = 0; i < s.size(); i++) {
+			
+			tmpPoint.x = s[i].x;
+			tmpPoint.y = s[i].y;
+			poly.points.push_back(tmpPoint);
+			glVertex2i(s[i].x, s[i].y);
+		}
+
+		break;
+
 	case 2:
 		fillPoly = !fillPoly;
 		break;

@@ -1,9 +1,11 @@
 // ProjetMathsFenetrageRemplissage.cpp : Defines the entry point for the console application.
 //
+#pragma once
 
 #include "stdafx.h"
 
 #include <iostream>
+#include <vector>
 
 #include "libs\glew\include\GL\glew.h"
 #include "libs\freeglut\include\GL\freeglut.h"
@@ -23,7 +25,7 @@ int main(int argc, char* argv[])
 {
 	int j(0);
 
-	auto t = intersection(glm::vec2(0, 0), glm::vec2(3, 0), glm::vec2(1, -1), glm::vec2(1, 1));
+	//auto t = intersection(glm::vec2(0, 0), glm::vec2(3, 0), glm::vec2(1, -1), glm::vec2(1, 1));
 
 	//On est censé obtenir le point d'intersection suivant : (1, 0)
 
