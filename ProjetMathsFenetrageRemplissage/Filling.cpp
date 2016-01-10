@@ -163,7 +163,7 @@ void resortLCA(list<Node>& L)
 }
 
 //////////////////Fonction de filling
-void Fill(PointArray P, colorType c)
+void Fill(PointArray P, color c)
 {
 	SI _SI;
 	list<Node> LCA;
@@ -197,24 +197,31 @@ void Fill(PointArray P, colorType c)
 }
 
 
-# define PI           3.14159265358979323846
+// Autre version du dessin du cercle
+# define PI 3.14159265358979323846
 void FillCircle(GLfloat centerX, GLfloat centerY, GLfloat radius)
 {
 	int i;
-	int triangleAmount = 1000;
-	GLfloat twicePi = 2.0f * PI;
+	// De même que pour le dessin du cercle, on calcule la précision de l'angle entre les points
+	int iterations = 1000;
+	GLfloat twoPi = 2.0f * PI;
+	GLfloat theta = twoPi / iterations;
 
+	// On règle l'épaisseur des traits
 	glEnable(GL_LINE_SMOOTH);
 	glLineWidth(5.0);
 
 	glBegin(GL_LINES);
-	for (i = 0; i <= triangleAmount; i++)
+	for (i = 0; i <= iterations; i++)
 	{
+		// En partant du centre du cercle
 		glVertex2f(centerX, centerY);
-		glVertex2f(centerX + (radius * cos(i * twicePi / triangleAmount)), centerY + (radius * sin(i * twicePi / triangleAmount)));
+		// Et en arrivant sur un point du cercle
+		glVertex2f(centerX + (radius * cos(i * theta)), centerY + (radius * sin(i * theta)));
 	}
 	glEnd();
 
+	// On désactive l'augmentation de l'épaisseur des lignes
 	glDisable(GL_LINE_SMOOTH);
 }
 
