@@ -44,11 +44,16 @@ public:
 
 PointArray poly;
 PointArray win;
+PointArray clippedPoly;
+PointArray circlePoints;
 
 int polyColor = 0;
 int winColor = 0;
 
 float x1, x2, x3, x4, y5, y2, y3, y4;
+
+bool pointSelected = false;
+
 
 struct Circle
 {
@@ -88,7 +93,6 @@ void draw_pixel(int x, int y)
 
 void DrawCircle(float cx, float cy, float r, int num_segments)
 {
-	http://slabode.exofire.net/circle_draw.shtml
 
 	float theta = 2 * 3.1415926 / float(num_segments);
 	float c = cosf(theta);//precalculate the sine and cosine
@@ -99,8 +103,13 @@ void DrawCircle(float cx, float cy, float r, int num_segments)
 	float y = 0;
 
 	glBegin(GL_LINE_LOOP);
+	poly.points = std::vector<_Point>();
 	for (int ii = 0; ii < num_segments; ii++)
 	{
+		_Point tempP = _Point();
+		tempP.x = x + cx;
+		tempP.y = y + cy;
+		poly.points.push_back(tempP);
 		glVertex2f(x + cx, y + cy);//output vertex 
 
 								   //apply the rotation matrix
@@ -276,11 +285,21 @@ void Render()
 
 		glColor3f(1.0f, 0.0f, 1.0f);
 		glBegin(GL_LINE_STRIP);
-		for (int i = 0; i < poly.points.size(); i++) {
-			glVertex2i(poly.points[i].x, poly.points[i].y);
+		for (int i = 0; i < clippedPoly.points.size(); i++) {
+			glVertex2i(clippedPoly.points[i].x, clippedPoly.points[i].y);
 		}
 		glEnd();
+
+		if (fillPoly) {
+			if (clippedPoly.points.size() >= 3) {
+				colorType fillC = { 1.0f,0.0f,1.0f };
+				Fill(clippedPoly, fillC);
+				//scanfill(poly.points);
+			}
+		}
 	}
+
+	
 	//FillCircle(50, 50, 50);
 
 	glFlush();
@@ -367,15 +386,17 @@ void processMenuEvents(int option) {
 
 		_Point tmpPoint;
 
-		poly.points = std::vector<_Point>();
+		clippedPoly.points = std::vector<_Point>();
 
 		for (int i = 0; i < s.size(); i++) {
 			
 			tmpPoint.x = s[i].x;
 			tmpPoint.y = s[i].y;
-			poly.points.push_back(tmpPoint);
-			glVertex2i(s[i].x, s[i].y);
+			clippedPoly.points.push_back(tmpPoint);
+			//glVertex2i(s[i].x, s[i].y);
 		}
+
+		clipPoly = !clipPoly;
 
 		break;
 
@@ -441,6 +462,7 @@ void option_menu(int option) {
 	case 1:
 		poly.points.clear();
 		win.points.clear();
+		clippedPoly.points.clear();
 		indexPolyMode = 0;
 		indexWinMode = 0;
 		break;

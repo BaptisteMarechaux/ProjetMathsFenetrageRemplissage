@@ -65,6 +65,13 @@ bool cuts(glm::vec2& checkedPointA, glm::vec2& checkedPointB, glm::vec2& windowP
 
 	//std::cout << "t : " << res.x << " s : " << res.y << std::endl;
 
+	if ((res.x >= 0 && res.x <= 1) || (res.y >= 0 && res.y <= 1)) {
+		return true;
+	}
+	else {
+		return false;
+	}
+	/*
 	if (res.x < 0)
 		return false;
 	else if (res.x > 1)
@@ -75,6 +82,7 @@ bool cuts(glm::vec2& checkedPointA, glm::vec2& checkedPointB, glm::vec2& windowP
 		return false;
 	else
 		return true;
+		*/
 }
 
 glm::vec2 intersection(const glm::vec2& checkedPointA, const glm::vec2& checkedPointB, const glm::vec2& windowPointA, const glm::vec2& windowPointB) {
@@ -110,16 +118,20 @@ glm::vec2 intersection(const glm::vec2& checkedPointA, const glm::vec2& checkedP
 
 	//return res;
 
-	if (res.x < 0)
-		return checkedPointB;
-	else if (res.x > 1)
-		return checkedPointB;
-	else if (res.y < 0)
-		return checkedPointB;
-	else if (res.y > 1)
-		return checkedPointB;
-	else
+	glm::vec2 bidule = windowPointA + (windowPointB - windowPointA)*res.y;
+	std::cout << "Resultat avec window" << std::endl;
+	std::cout << bidule.x << "," << bidule.y << std::endl;
+	bidule = checkedPointA + (checkedPointB - checkedPointA)*res.x;
+	std::cout << "Resultat avec shape " << std::endl;
+	std::cout << bidule.x << "," << bidule.y << std::endl;
+
+	if ((res.x >= 0 && res.x <= 1) || (res.y >= 0 && res.y <= 1)) {
 		return windowPointA + (windowPointB - windowPointA)*res.y;
+	}
+	else {
+		return  checkedPointB;
+	}
+
 }
 
 std::vector<glm::vec2> maskInWindow(std::vector<glm::vec2>& s, std::vector<glm::vec2>& f) {

@@ -24,6 +24,20 @@
 int main(int argc, char* argv[])
 {
 	int j(0);
+	std::vector<glm::vec2> s = std::vector<glm::vec2>();
+	std::vector<glm::vec2> f = std::vector<glm::vec2>();
+
+	s.push_back(glm::vec2(0, 4));
+	s.push_back(glm::vec2(0, 7));
+	s.push_back(glm::vec2(5, 7));
+	s.push_back(glm::vec2(5, 4));
+
+	f.push_back(glm::vec2(1, 1));
+	f.push_back(glm::vec2(1, 5));
+	f.push_back(glm::vec2(4, 5));
+	f.push_back(glm::vec2(4, 1));
+
+	s = maskInWindow(s, f);
 
 	//auto t = intersection(glm::vec2(0, 0), glm::vec2(3, 0), glm::vec2(1, -1), glm::vec2(1, 1));
 
