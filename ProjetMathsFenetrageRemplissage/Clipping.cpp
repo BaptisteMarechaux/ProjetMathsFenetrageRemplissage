@@ -6,6 +6,7 @@
 #include "Clipping.h"
 #include "Shape.h"
 #include "libs\glm\glm.hpp"
+#include "libs\glm\gtc\constants.hpp"
 
 
 bool visible(const glm::vec2& checkedPoint, const glm::vec2& windowPointA, const glm::vec2& windowPointB) {
@@ -144,6 +145,32 @@ std::vector<glm::vec2> maskInWindow(std::vector<glm::vec2>& s, std::vector<glm::
 	glm::vec2 sIn; //point courant de la forme que l'on veut couper
 	glm::vec2 sLast; //dernier point de la forme que l'on veut couper
 
+	bool convex = false;
+
+	//On vérifie si le polygone est concave
+	//Si le polygone est concave on lance n(coté de f) - 2 fois la procédure de clipping
+	if (!isConvex(f)) {
+		auto vecList = std::vector< std::vector<glm::vec2> >();
+		auto winList = std::vector< std::vector<glm::vec2> >();
+		int k = 0;
+		for (int i = 2; i < f.size() - 2; i++) {
+
+			k++;
+		}
+
+		for (int i = 0; i < winList.size(); i++) {
+			vecList.push_back( maskInWindow(s, winList[i]) );
+		}
+
+		for (int i = 0; i < vecList.size(); i++) {
+			for (int j = 0; j < vecList[i].size(); j++) {
+				if (!isInShape(vecList[i][j], outShape)) {
+					outShape.push_back(vecList[i][j]);
+				}
+			}
+		}
+	}
+
 	std::cout << "Points de la forme coupée :" << std::endl;
 
 	for (unsigned int i = 0; i < s.size(); i++) {
@@ -193,4 +220,73 @@ std::vector<glm::vec2> maskInWindow(std::vector<glm::vec2>& s, std::vector<glm::
 	std::cout << std::endl;
 
 	return outShape;
+}
+
+bool isInShape(glm::vec2 p, std::vector<glm::vec2> shape) {
+	for (int i = 0; i < shape.size(); i++) {
+		if (p == shape[i]) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool isConvex(std::vector<glm::vec2> s) {
+	float r=0;
+	for (int i = 0; i < s.size(); i++) {
+		if (i == 0) {
+			r+=glm::acos(glm::dot(
+					s[s.size() - 1] - s[0],
+					s[1] - s[0]
+				) /
+				(glm::distance(
+					s[s.size() - 1],
+					s[0]
+				) * 
+				glm::distance(
+					s[1],
+					s[0]
+				))
+			);
+		}
+		else if (i == s.size()-1) {
+			r+=glm::acos(glm::dot(
+					s[0] - s[s.size()-1],
+					s[s.size()-2] - s[s.size()-1]
+				) /
+				(glm::distance(
+					s[s.size() - 2],
+					s[s.size() -1]
+					) *
+					glm::distance(
+						s[0],
+						s[s.size()-1]
+						))
+				);
+		}
+		else {
+			r += glm::acos(glm::dot(
+				s[i+1] - s[i],
+				s[i-1] - s[i]
+				) /
+				(glm::distance(
+					s[i-1],
+					s[i]
+					) *
+					glm::distance(
+						s[i+1],
+						s[i]
+						))
+				);
+		}
+	}
+
+	float pii = 3.14159265358979323846;
+
+	if (r > 2 * pii ){
+		return false;
+	}
+
+	return true;
 }

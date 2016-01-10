@@ -135,8 +135,9 @@ void Render()
 			/*glBegin(GL_POINTS);
 			for (int i = 0; i < poly.points.size(); i++) {
 				glVertex2i(poly.points[i].x, poly.points[i].y);
-			}*/
+			}
 			glEnd();
+			*/
 			break;
 
 		default:

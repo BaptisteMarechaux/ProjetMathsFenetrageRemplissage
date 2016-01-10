@@ -13,3 +13,7 @@ glm::vec2 intersection(const glm::vec2& checkedPointA, const glm::vec2& checkedP
 
 std::vector<glm::vec2> maskInWindow(std::vector<glm::vec2>& s, std::vector<glm::vec2>& f);
 
+bool isInShape(glm::vec2 p, std::vector<glm::vec2> shape);
+
+bool isConvex(std::vector<glm::vec2> s);
+
