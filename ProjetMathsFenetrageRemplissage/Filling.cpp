@@ -27,7 +27,7 @@ public:
 // Insertion avec classement de même ordre pour le SI et LCA
 void insertInTheList(list<Node>& orderedList, const Node& item)
 {
-	list<Node>::iterator currentNode = orderedList.begin(); //http://www.cplusplus.com/reference/list/list/begin/
+	list<Node>::iterator currentNode = orderedList.begin();
 	while ((currentNode != orderedList.end()) && ((*currentNode).xmin < item.xmin)) {
 		currentNode++;
 	}

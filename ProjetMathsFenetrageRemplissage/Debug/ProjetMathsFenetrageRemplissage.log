@@ -1,24 +1,9 @@
-﻿  Draw.cpp
-c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(70): warning C4305: 'argument': truncation from 'double' to 'GLclampf'
-c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(97): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(110): warning C4244: '=': conversion from 'float' to 'GLint', possible loss of data
-c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(111): warning C4244: '=': conversion from 'float' to 'GLint', possible loss of data
-c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(157): warning C4018: '<': signed/unsigned mismatch
-c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(159): warning C4244: 'argument': conversion from 'GLint' to 'float', possible loss of data
-c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(162): warning C4244: 'argument': conversion from 'GLint' to 'float', possible loss of data
-c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(191): warning C4018: '<': signed/unsigned mismatch
-c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(199): warning C4018: '<': signed/unsigned mismatch
-c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(207): warning C4018: '<': signed/unsigned mismatch
-c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(237): warning C4018: '<': signed/unsigned mismatch
-c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(245): warning C4018: '<': signed/unsigned mismatch
-c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(253): warning C4018: '<': signed/unsigned mismatch
-c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(277): warning C4244: 'argument': conversion from 'GLint' to 'float', possible loss of data
-c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(280): warning C4244: 'argument': conversion from 'GLint' to 'GLfloat', possible loss of data
-c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(288): warning C4018: '<': signed/unsigned mismatch
-c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(333): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
-c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(391): warning C4018: '<': signed/unsigned mismatch
-c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(393): warning C4244: '=': conversion from 'float' to 'GLint', possible loss of data
-c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(394): warning C4244: '=': conversion from 'float' to 'GLint', possible loss of data
-c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(485): warning C4101: 'winWingMenu': unreferenced local variable
-c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\draw.cpp(485): warning C4101: 'fillMenu': unreferenced local variable
+﻿  Clipping.cpp
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\clipping.cpp(156): warning C4018: '<': signed/unsigned mismatch
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\clipping.cpp(164): warning C4018: '<': signed/unsigned mismatch
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\clipping.cpp(168): warning C4018: '<': signed/unsigned mismatch
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\clipping.cpp(169): warning C4018: '<': signed/unsigned mismatch
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\clipping.cpp(229): warning C4018: '<': signed/unsigned mismatch
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\clipping.cpp(240): warning C4018: '<': signed/unsigned mismatch
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\clipping.cpp(288): warning C4305: 'initializing': truncation from 'double' to 'float'
   ProjetMathsFenetrageRemplissage.vcxproj -> C:\Users\Baptiste\Documents\GitHub\ProjetMathsFenetrageRemplissage\Debug\ProjetMathsFenetrageRemplissage.exe
