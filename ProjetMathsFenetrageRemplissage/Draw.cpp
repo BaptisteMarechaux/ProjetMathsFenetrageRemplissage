@@ -28,9 +28,14 @@ int indexPolyMode=0;
 int indexWinMode=0;
 // Index du mode général
 int mode; // 1 = Poly
+bool modifying = false;
+int indexOfModifyingPoint = 0;
+int modifyingMode = 0;
 // Switch pour savoir si on coupe ou non et si on rempli ou non
 bool fillPoly = false;
 bool clipPoly = false;
+
+bool leftButtonPressed = false;
 
 // Tableaux de points pour les formes à l'écran
 PointArray poly;
@@ -263,14 +268,16 @@ void Render()
 	}
 
 	if (clipPoly) {
-
+		// Dessin du polygon clippé
 		glColor3f(1.0f, 0.0f, 1.0f);
-		glBegin(GL_LINE_STRIP);
+		glBegin(GL_LINE_LOOP);
+		// On relie tout les points de la forme clippée
 		for (int i = 0; i < clippedPoly.points.size(); i++) {
 			glVertex2i(clippedPoly.points[i].x, clippedPoly.points[i].y);
 		}
 		glEnd();
 
+		// Coloriage de la forme en fonction de la couleur choisie
 		if (fillPoly) {
 			if (clippedPoly.points.size() >= 3) {
 				switch (polyColor) {
@@ -320,12 +327,13 @@ void mouse(int button, int state, int x, int y)
 		_Point tmpPoint;
 		tmpPoint.x = mousex;
 		tmpPoint.y = mousey;
-		if(mode == 1)
+		if (mode == 1) {
 			poly.points.push_back(tmpPoint);
-		else
-		{
-			win.points.push_back(tmpPoint);
-		}
+		}else 
+			if(mode == 2)
+			{
+				win.points.push_back(tmpPoint);
+			}
 		if (drawCircleMode == 1) {
 			circle.x = mousex;
 			circle.y = mousey;
@@ -340,8 +348,48 @@ void mouse(int button, int state, int x, int y)
 			}
 		}
 
-		std::cout << poly.points.size();
+		//std::cout << poly.points.size();
+
+		leftButtonPressed = false;
 	}
+
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+		indexOfModifyingPoint = 0;
+		modifyingMode = 0;
+
+		for (unsigned int i = 0; i < poly.points.size(); i++) {
+			if (sqrt((x - poly.points[i].x)*(x - poly.points[i].x) + (y - poly.points[i].y)*(y - poly.points[i].y)) < 15) {
+				indexOfModifyingPoint = i;
+				modifyingMode = 1;
+				leftButtonPressed = true;
+				break;
+			}
+		}
+		for (unsigned int i = 0; i < win.points.size(); i++) {
+			if (sqrt((x - win.points[i].x)*(x - win.points[i].x) + (y - win.points[i].y)*(y - win.points[i].y)) < 15) {
+				indexOfModifyingPoint = i;
+				modifyingMode = 2;
+				leftButtonPressed = true;
+				break;
+			}
+		}
+	}
+
+	glutPostRedisplay();
+}
+
+void mouseMotion(int x, int y) {
+	if (modifying && leftButtonPressed) {
+		if (modifyingMode == 1) {
+			poly.points[indexOfModifyingPoint].x = x;
+			poly.points[indexOfModifyingPoint].y = y;
+		}
+		else if (modifyingMode == 2) {
+			win.points[indexOfModifyingPoint].x = x;
+			win.points[indexOfModifyingPoint].y = y;
+		}
+	}
+	glutPostRedisplay();
 }
 
 void UpdateClipping() {
@@ -514,21 +562,23 @@ void option_menu(int option) {
 	switch (option) {
 	// Nettoie la fenêtre et les structures
 	case 1:
+		modifying = !modifying;
+		mode = 0;
+		break;
+	case 2:
 		poly.points.clear();
 		win.points.clear();
 		clippedPoly.points.clear();
 		indexPolyMode = 0;
 		indexWinMode = 0;
 		drawCircleMode = 0;
+		mode = 0;
 		clipPoly = false;
 		fillPoly = false;
 		break;
 	// Affiche les crédits
-	case 2:
-		showCredits = !showCredits;
-		break;
 	case 3:
-		indexPolyMode = 3;
+		showCredits = !showCredits;
 		break;
 	}
 	glutPostRedisplay();
@@ -566,8 +616,9 @@ void initMenu() {
 	glutAddMenuEntry("Polygon", 3);
 
 	optionMenu = glutCreateMenu(option_menu);
-	glutAddMenuEntry("Clear", 1);
-	glutAddMenuEntry("Credits", 2);
+	glutAddMenuEntry("Modifier", 1);
+	glutAddMenuEntry("Effacer", 2);
+	glutAddMenuEntry("Credits", 3);
 
 	glutCreateMenu(processMenuEvents);
 	glutAddSubMenu("Colours", colorsMenu);

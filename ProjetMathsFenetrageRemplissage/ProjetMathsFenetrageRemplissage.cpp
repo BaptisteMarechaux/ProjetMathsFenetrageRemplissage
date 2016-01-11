@@ -62,6 +62,7 @@ int main(int argc, char* argv[])
 	// glutReshapeFunc(myReshape);
 	initMenu();
 	glutMouseFunc(mouse);
+	glutMotionFunc(mouseMotion);
 	glutKeyboardFunc(keyboard);
 
 	Initialize();
