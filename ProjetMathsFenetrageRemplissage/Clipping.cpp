@@ -188,65 +188,6 @@ std::vector<std::vector<glm::vec2>> maskInWindow(std::vector<glm::vec2>& s, std:
 
 			}
 
-			/*
-			outShape = std::vector<glm::vec2>();
-			for (int i = 0; i < vecList.size(); i++) {
-				for (int j = 0; j < vecList[i].size(); j++) {
-					if (!isInShape(vecList[i][j], outShape)) {
-						outShape.push_back(vecList[i][j]);
-					}
-				}
-			}
-
-			
-			std::vector<glm::vec2> alreadyComputed;
-			float lowerAngle = 99999;
-			float lowerAngleIndex = 0;
-			float lowerDistance = 0;
-			for (int i = 0; i < outShape.size(); i++) {
-				if (outShape[i].y <= outShape[lowerDistance].y) {
-					if (outShape[i].y == outShape[lowerDistance].y) {
-						lowerDistance = outShape[i].x < outShape[lowerDistance].x ? i : lowerDistance;
-					}
-					else {
-						lowerDistance = i;
-					}
-				}
-			}
-
-			glm::vec2 curPoint = outShape[lowerDistance];
-			int curIndex = lowerDistance;
-
-			lowerDistance = 0;
-
-			while (alreadyComputed.size() < outShape.size()) {
-				alreadyComputed.push_back(curPoint);
-				for (int i = 0; i < outShape.size(); i++) {
-					if (isInShape(outShape[i], alreadyComputed))
-						continue;
-
-					auto a = glm::atan((1 - curPoint.x) / (outShape[i].y - curPoint.y));
-
-					if (a <= lowerAngle) {
-						if (a == lowerAngle) {
-
-						}
-						else {
-							lowerAngle = a;
-							lowerAngleIndex = i;
-						}
-						
-
-					}
-
-				}
-
-				
-				curPoint = outShape[lowerAngleIndex];
-
-			}
-			*/
-
 			return vecList;
 		}
 	}
@@ -320,12 +261,14 @@ bool isInShape(glm::vec2 p, std::vector<glm::vec2> shape) {
 	return false;
 }
 
+/*
 bool isConvex(std::vector<glm::vec2> s) {
 	
 	float r=0;
+	float pii = 3.14159265358979323846;
 	for (int i = 0; i < s.size(); i++) {
 		if (i == 0) {
-			r+=glm::acos(glm::dot(
+			r+=(2*pii) - glm::acos(glm::dot(
 					s[s.size() - 1] - s[0],
 					s[1] - s[0]
 				) /
@@ -340,7 +283,7 @@ bool isConvex(std::vector<glm::vec2> s) {
 			);
 		}
 		else if (i == s.size()-1) {
-			r+=glm::acos(glm::dot(
+			r+= (2 * pii) - glm::acos(glm::dot(
 					s[0] - s[s.size()-1],
 					s[s.size()-2] - s[s.size()-1]
 				) /
@@ -355,9 +298,9 @@ bool isConvex(std::vector<glm::vec2> s) {
 				);
 		}
 		else {
-			r += glm::acos(glm::dot(
+			r += (2 * pii) - glm::acos(glm::dot(
 				s[i+1] - s[i],
-				s[i-1] - s[i]
+				s[i] - s[i-1]
 				) /
 				(glm::distance(
 					s[i-1],
@@ -371,10 +314,8 @@ bool isConvex(std::vector<glm::vec2> s) {
 		}
 	}
 
-	float pii = 3.14159265358979323846;
 
-
-	if (r != 2 * pii ){
+	if (r != 4*pii ){
 		std::cout << "Forme Concave" << std::endl;
 		std::cout << r << std::endl;
 		return false;
@@ -383,6 +324,50 @@ bool isConvex(std::vector<glm::vec2> s) {
 	std::cout << "Forme Convexe" << std::endl;
 	std::cout << r << std::endl;
 
+	return true;
+}
+
+*/
+
+bool isConvex(std::vector<glm::vec2> s) {
+	bool sign = false;
+
+	glm::vec2 v1,v2;
+
+	if (s.size() < 4)
+		return true;
+
+	for (int i = 0; i<s.size(); i++)
+	{
+		if (i == 0) {
+			
+			v2 = s[s.size() - 1] - s[0];
+			v1 = s[1] - s[0];
+		}
+		else if (i == s.size() - 1) {
+		
+			v1 = s[0] - s[s.size() - 1];
+			v2 = s[s.size() - 2] - s[s.size() - 1];
+	
+		}
+		else {
+			
+			v1 = s[i + 1] - s[i];
+			v2 = s[i-1] - s[i];
+				
+		}
+
+		glm::vec3 b1 = glm::vec3(v1.x, v1.y, 0);
+		glm::vec3 b2 = glm::vec3(v2.x, v2.y, 0);
+		auto cross = glm::cross(b1, b2);
+		if (i == 0)
+			sign = cross.z>0;
+		else
+		{
+			if (sign != (cross.z>0))
+				return false;
+		}
+	}
 	return true;
 }
 

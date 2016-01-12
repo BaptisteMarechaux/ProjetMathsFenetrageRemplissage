@@ -47,7 +47,7 @@ int main(int argc, char* argv[])
 
 	//s = maskInWindow(s, f);
 
-	bool a = isConvex( s);
+	//bool a = isConvex( s);
 
 	//auto t = intersection(glm::vec2(0, 0), glm::vec2(3, 0), glm::vec2(1, -1), glm::vec2(1, 1));
 
