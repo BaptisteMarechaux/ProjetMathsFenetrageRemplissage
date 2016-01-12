@@ -23,4 +23,4 @@ void drawText(int x, int y, char *string, void *font);
 
 void DrawCircle(float cx, float cy, float r, int numberOfSegments);
 
-void UpdateClipping(PointArray poly);
+void UpdateClipping(PointArray poly, PointArray win);

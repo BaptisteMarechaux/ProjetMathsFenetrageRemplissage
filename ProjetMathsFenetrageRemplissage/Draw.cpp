@@ -29,6 +29,7 @@ int indexPolyMode=3;
 int mode; // 1 = Poly
 bool modifying = false;
 int indexOfModifyingPoly = 0;
+int indexOfModifyingWin = 0;
 int indexOfModifyingPoint = 0;
 int modifyingMode = 0;
 // Switch pour savoir si on coupe ou non et si on rempli ou non
@@ -41,12 +42,14 @@ bool leftButtonPressed = false;
 // Tableaux de points pour les formes à l'écran
 vector<PointArray> polys;
 int currentPoly = 0;
-PointArray win;
+vector<PointArray> wins;
+int currentWin = 0;
 vector<PointArray> clippedPoly;
+std::vector<std::vector<glm::vec2>> triangles;
 
 //Couleur selectionnée pour les formes
 vector<int>polyColor = { 2 };
-int winColor = 1;
+vector<int>winColor = { 1 };
 
 float x1, x2, x3, x4, y5, y2, y3, y4;
 
@@ -89,6 +92,8 @@ void Initialize()
 
 	PointArray firstPoly;
 	polys.push_back(firstPoly);
+	PointArray firstWin;
+	wins.push_back(firstWin);
 }
 
 // Rendu des formes dans la fenêtre
@@ -191,34 +196,36 @@ void Render()
 		}
 	}
 
-	// On choisi la couleur de la fenêtre
-	switch (winColor) {
-	case 1:
-		glColor3fv(redColor);
-		break;
-	case 2:
-		glColor3fv(blueColor);
-		break;
-	case 3:
-		glColor3fv(greenColor);
-		break;
-	case 4:
-		glColor3fv(blackColor);
-		break;
-	case 5:
-		glColor3fv(purpleColor);
-		break;
+	// On trace la fenêtre
+	for (int w = 0; w < wins.size(); w++) {
+		// On choisi la couleur de la fenêtre
+		switch (winColor[w]) {
+		case 1:
+			glColor3fv(redColor);
+			break;
+		case 2:
+			glColor3fv(blueColor);
+			break;
+		case 3:
+			glColor3fv(greenColor);
+			break;
+		case 4:
+			glColor3fv(blackColor);
+			break;
+		case 5:
+			glColor3fv(purpleColor);
+			break;
+		}
+		glBegin(GL_LINE_LOOP);
+		for (int p = 0; p < wins[w].points.size(); p++) {
+			glVertex2i(wins[w].points[p].x, wins[w].points[p].y);
+		}
+		glEnd();
 	}
 
-	// On trace la fenêtre
-	glBegin(GL_LINE_LOOP);
-	for (int i = 0; i < win.points.size(); i++) {
-		glVertex2i(win.points[i].x, win.points[i].y);
-	}
-	glEnd();
 
 	//Remplissage du polygon dessiné
-	if (!clipPoly) {
+	if (!clipPoly && !fillingPart) {
 		if (fillPoly) {
 			for (int p = 0; p < polys.size(); p++)
 			{
@@ -244,15 +251,18 @@ void Render()
 		}
 	}
 
-	clippedPoly.clear();
-	for (int p = 0; p < polys.size(); p++)
-	{
-		if (polys[p].points.size() >= 3 && win.points.size() >= 3 && clipPoly) {
-			UpdateClipping(polys[p]);
-		}
-	}
-
 	if (clipPoly) {
+		clippedPoly.clear();
+		for (int p = 0; p < polys.size(); p++)
+		{
+			for (int w = 0; w < wins.size(); w++)
+			{
+				if (polys[p].points.size() >= 3 && wins[w].points.size() >= 3 && clipPoly) {
+					UpdateClipping(polys[p], wins[w]);
+				}
+			}
+		}
+
 		// Dessin du polygon clippé
 		glColor3f(1.0f, 0.0f, 1.0f);
 		
@@ -268,33 +278,98 @@ void Render()
 		
 
 		// Coloriage de la forme en fonction de la couleur choisie
-		if (fillPoly) {
+		if (fillPoly && !fillingPart) {
 			for (int cp = 0; cp < clippedPoly.size(); cp++)
 			{
 				if (clippedPoly[cp].points.size() >= 3) {
-					switch (polyColor[cp]) {
-					case 1:
-						Fill(clippedPoly[cp], redColor);
-						break;
-					case 2:
+					if (cp < polyColor.size()) {
+						switch (polyColor[cp]) {
+						case 1:
+							Fill(clippedPoly[cp], redColor);
+							break;
+						case 2:
+							Fill(clippedPoly[cp], blueColor);
+							break;
+						case 3:
+							Fill(clippedPoly[cp], greenColor);
+							break;
+						case 4:
+							Fill(clippedPoly[cp], blackColor);
+							break;
+						case 5:
+							Fill(clippedPoly[cp], purpleColor);
+							break;
+						}
+					}
+					else
+					{
 						Fill(clippedPoly[cp], blueColor);
-						break;
-					case 3:
-						Fill(clippedPoly[cp], greenColor);
-						break;
-					case 4:
-						Fill(clippedPoly[cp], blackColor);
-						break;
-					case 5:
-						Fill(clippedPoly[cp], purpleColor);
-						break;
 					}
 				}
 			}
 		}
 	}
 	
-	//FillCircle(50, 50, 50);
+	// Triangulation et remplissage d'une partie du polygone
+	if (fillingPart) {
+		std::vector<glm::vec2> tmpPoints;
+		if (!clipPoly) {
+			for (int p = 0; p < polys[currentPoly].points.size(); p++)
+			{
+				tmpPoints.push_back(glm::vec2(polys[currentPoly].points[p].x, polys[currentPoly].points[p].y));
+			}
+		}
+		else
+		{
+			if(clippedPoly.size() != 0)
+			for (int p = 0; p < clippedPoly[clippedPoly.size()-1].points.size(); p++)
+			{
+				tmpPoints.push_back(glm::vec2(clippedPoly[clippedPoly.size() - 1].points[p].x, clippedPoly[clippedPoly.size() - 1].points[p].y));
+			}
+		}
+		triangles = triangulation(tmpPoints);
+		for (int t = 0; t < triangles.size(); t++) {
+			glBegin(GL_LINE_LOOP);
+			for (int i = 0; i < triangles[t].size(); i++) {
+				glVertex2i(triangles[t][i].x, triangles[t][i].y);
+			}
+			glEnd();
+		}
+
+		for (int t = 0; t < triangles.size(); t++) {
+			if (visible(glm::vec2(mousex, mousey), triangles[t][0], triangles[t][1])
+				&& visible(glm::vec2(mousex, mousey), triangles[t][1], triangles[t][2])
+				&& visible(glm::vec2(mousex, mousey), triangles[t][2], triangles[t][0])) {
+				_Point tmpPoint;
+				PointArray tmpPointArray;
+				tmpPointArray.points = std::vector<_Point>();
+				for (int i = 0; i < triangles[t].size(); i++) {
+					tmpPoint.x = triangles[t][i].x;
+					tmpPoint.y = triangles[t][i].y;
+					tmpPointArray.points.push_back(tmpPoint);
+				}
+
+				switch (polyColor[currentPoly]) {
+				case 1:
+					Fill(tmpPointArray, redColor);
+					break;
+				case 2:
+					Fill(tmpPointArray, blueColor);
+					break;
+				case 3:
+					Fill(tmpPointArray, greenColor);
+					break;
+				case 4:
+					Fill(tmpPointArray, blackColor);
+					break;
+				case 5:
+					Fill(tmpPointArray, purpleColor);
+					break;
+				}
+				break;
+			}
+		}
+	}
 
 	//Affiche les crédits
 	if (showCredits) {
@@ -323,7 +398,7 @@ void mouse(int button, int state, int x, int y)
 		}else 
 			if(mode == 2)
 			{
-				win.points.push_back(tmpPoint);
+				wins[currentWin].points.push_back(tmpPoint);
 			}
 		if (drawCircleMode == 1) {
 			circle.x = mousex;
@@ -341,7 +416,7 @@ void mouse(int button, int state, int x, int y)
 				DrawCircle(circle.x, circle.y, circle.radius, 40);
 				drawCircleMode = 0;
 			}
-		}	
+		}
 
 		//std::cout << poly.points.size();
 
@@ -350,6 +425,7 @@ void mouse(int button, int state, int x, int y)
 
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
 		indexOfModifyingPoly = 0;
+		indexOfModifyingWin = 0;
 		indexOfModifyingPoint = 0;
 		modifyingMode = 0;
 
@@ -367,13 +443,19 @@ void mouse(int button, int state, int x, int y)
 			if (indexOfModifyingPoly != 0)
 				break;
 		}
-		for (unsigned int i = 0; i < win.points.size(); i++) {
-			if (sqrt((x - win.points[i].x)*(x - win.points[i].x) + (y - win.points[i].y)*(y - win.points[i].y)) < 15) {
-				indexOfModifyingPoint = i;
-				modifyingMode = 2;
-				leftButtonPressed = true;
-				break;
+		for (int w = 0; w < wins.size(); w++)
+		{
+			for (unsigned int i = 0; i < wins[w].points.size(); i++) {
+				if (sqrt((x - wins[w].points[i].x)*(x - wins[w].points[i].x) + (y - wins[w].points[i].y)*(y - wins[w].points[i].y)) < 15) {
+					indexOfModifyingWin = w;
+					indexOfModifyingPoint = i;
+					modifyingMode = 2;
+					leftButtonPressed = true;
+					break;
+				}
 			}
+			if (indexOfModifyingWin != 0)
+				break;
 		}
 	}
 
@@ -387,14 +469,16 @@ void mouseMotion(int x, int y) {
 			polys[indexOfModifyingPoly].points[indexOfModifyingPoint].y = y;
 		}
 		else if (modifyingMode == 2) {
-			win.points[indexOfModifyingPoint].x = x;
-			win.points[indexOfModifyingPoint].y = y;
+			wins[indexOfModifyingWin].points[indexOfModifyingPoint].x = x;
+			wins[indexOfModifyingWin].points[indexOfModifyingPoint].y = y;
 		}
 	}
 	glutPostRedisplay();
 }
 
-void UpdateClipping(PointArray poly) {
+// Fonction de mise à jour de la liste de polygons clippés
+void UpdateClipping(PointArray poly, PointArray win) {
+	// On défini une structure pour passer les fenêtres et une pour les polygones
 	std::vector<glm::vec2> s = std::vector<glm::vec2>();
 	std::vector<glm::vec2> f = std::vector<glm::vec2>();
 	auto r = std::vector<std::vector<glm::vec2>>();
@@ -410,7 +494,6 @@ void UpdateClipping(PointArray poly) {
 
 	for (int j = 0; j < r.size(); j++) {
 		_Point tmpPoint;
-
 		PointArray tmpPointArray;
 		tmpPointArray.points = std::vector<_Point>();
 		for (int i = 0; i < r[j].size(); i++) {
@@ -449,10 +532,11 @@ void keyboard(unsigned char key, int xmouse, int ymouse)
 		break;
 	// On zoom avec le + du pavé numérique
 	case '+':
-		hmax -= 100;
-		vmax -= 100;
-		hmin += 100;
-		vmin += 100;
+		// Modification des coordonées du repère
+		hmax -= 50;
+		vmax -= 50;
+		hmin += 50;
+		vmin += 50;
 		// Réécriture de la matrice de projection (camera, != model view (transformation des objets)
 		glMatrixMode(GL_PROJECTION);
 		// Remplace la matrice actuelle par la matrice identité (1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1)
@@ -461,12 +545,14 @@ void keyboard(unsigned char key, int xmouse, int ymouse)
 		gluOrtho2D(hmin, (GLdouble)hmax,
 			(GLdouble)vmax, vmin);
 		break;
+
 	// On dé-zoom avec le - du pavé numérique
 	case '-':
-		hmax += 100;
-		vmax += 100;
-		hmin -= 100;
-		vmin -= 100;
+		// Modification des coordonées du repère
+		hmax += 50;
+		vmax += 50;
+		hmin -= 50;
+		vmin -= 50;
 		// Réécriture de la matrice de projection (camera, != model view (transformation des objets)
 		glMatrixMode(GL_PROJECTION);
 		// Remplace la matrice actuelle par la matrice identité (1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1)
@@ -492,9 +578,20 @@ void processMenuEvents(int option) {
 		exit(0);
 		break;
 	case 1:
-		win.points.clear();
+		if (wins.size() != 0) {
+			if (wins[currentWin].points.size() > 3) {
+				PointArray tmpWin;
+				wins.push_back(tmpWin);
+				winColor.push_back(1);
+				currentWin++;
+			}
+			else
+			{
+				wins[currentWin].points.clear();
+			}
+		}
 		mode = 2;
-		glutPostRedisplay();
+		drawCircleMode = 0;
 		clippedPoly.clear();
 		break;
 	case 2:
@@ -506,6 +603,8 @@ void processMenuEvents(int option) {
 		fillPoly = !fillPoly;
 		break;
 	}
+	modifying = false;
+
 	// Demande de le redessin de la fenêtre
 	glutPostRedisplay();
 }
@@ -513,7 +612,13 @@ void processMenuEvents(int option) {
 // Fonction du menu qui permet de changer la couleur de la forme dessinée
 void colors_menu(int option) {
 	if (mode == 2) {
-		winColor = option;
+		if (winColor.size() != 0) {
+			winColor[currentWin] = option;
+		}
+		else
+		{
+			winColor.push_back(option);
+		}
 	}
 	else
 	{
@@ -561,6 +666,8 @@ void polyCut_menu(int option) {
 	
 	//std::cout << polys.size();
 
+	modifying = false;
+
 	glutPostRedisplay();
 }
 
@@ -594,15 +701,17 @@ void option_menu(int option) {
 		break;
 	case 3:
 		polys.clear();
-		Initialize();
 		currentPoly = 0;
-		win.points.clear();
+		wins.clear();
+		currentWin = 0;
+		Initialize();
 		clippedPoly.clear();
-		indexPolyMode = 0;
+		indexPolyMode = 3;
 		drawCircleMode = 0;
 		mode = 0;
 		clipPoly = false;
 		fillPoly = false;
+		fillingPart = false;
 		break;
 	// Affiche les crédits
 	case 4:
@@ -677,16 +786,15 @@ void drawText(int x, int y, char *string, void *font)
 	}
 }
 
+// Dessin du cercle
 void DrawCircle(float cx, float cy, float r, int numberOfSegments)
 {
 	// Angle entre deux points (2pi/x)
 	float theta = 2 * 3.1415926 / float(numberOfSegments);
-	// Précalcule les sinus et cosinus
+	// On calcule les valeurs d'augmentation de x et y pour cet angle
 	float c = cosf(theta);
 	float s = sinf(theta);
-	float tmpx;
-
-	//Angle 0
+	//Pour l'angle 0
 	float x = r;
 	float y = 0;
 
@@ -694,12 +802,13 @@ void DrawCircle(float cx, float cy, float r, int numberOfSegments)
 	glBegin(GL_LINE_LOOP);
 	// Nettoyage de la liste
 	polys[currentPoly].points = std::vector<_Point>();
+
 	// Placement d'autant de points que de segments demandés
 	for (int i = 0; i < numberOfSegments; i++)
 	{
 		// Création d'un nouveau point
 		_Point tempP = _Point();
-		// Placement du point sur le cercle et en fonction du centre de ce cercle
+		// Placement du point sur le cercle et en fonction du centre du cercle
 		tempP.x = x + cx;
 		tempP.y = y + cy;
 		 // Insertion du point dessiné dans dans la liste
@@ -707,7 +816,7 @@ void DrawCircle(float cx, float cy, float r, int numberOfSegments)
 
 		//Modification des coordonées
 		// Sauvergarde du x
-		tmpx = x;
+		float tmpx = x;
 		// x se déplace de droite à gauche (puis inverse)
 		x = c * x - s * y;
 		// y se déplace de haut en base (puis inverse)

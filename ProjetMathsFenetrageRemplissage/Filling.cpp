@@ -9,14 +9,18 @@ class Node
 public:
 	int ymax;
 	float xmin, invertCoef;
+	// Constructeur
 	Node() : ymax(-1), xmin(0.0), invertCoef(0.0) { };
 };
 
 class SI
 {
 public:
+	// Contruit la structure
 	void buildSI(PointArray &);
+	// Cherche le point suivant
 	int yNext(int, vector<_Point>);
+	// Enregistre les cotés
 	void recordOfSide(_Point, _Point, int);
 
 	vector<list<Node> > SIList; // tableau de list de noeuds, soit la structure principale de SI
@@ -27,10 +31,14 @@ public:
 // Insertion avec classement de même ordre pour le SI et LCA
 void insertInTheList(list<Node>& orderedList, const Node& item)
 {
+	// On prend le premier élément
 	list<Node>::iterator currentNode = orderedList.begin();
+	// Tant qu'on a un y plus petit
 	while ((currentNode != orderedList.end()) && ((*currentNode).xmin < item.xmin)) {
+		//On va chercher un noeud suivant
 		currentNode++;
 	}
+	// On peut placer notre noeud en bout de chaine
 	orderedList.insert(currentNode, item);
 }
 
@@ -66,6 +74,7 @@ void SI::recordOfSide(_Point minPoint, _Point maxPoint, int yComp)
 	insertInTheList(SIList[minPoint.y], n);
 }
 
+// Construction de la structure intermediaire
 void SI::buildSI(PointArray& Poly) //const
 {
 	_Point v1, v2;
@@ -93,13 +102,15 @@ void SI::buildSI(PointArray& Poly) //const
 
 
 //////////////LCA
-void buildLCA(list<Node> &LCA, list<Node> ET)
+void buildLCA(list<Node> &LCA, list<Node> Element)
 {
+	// On défini un iterator
 	list<Node>::iterator iter;
-
-	iter = ET.begin();
+	iter = Element.begin();
 	iter++;
-	while (iter != ET.end())
+
+	// Tant qu'on est pas au bout de la sous list du SI
+	while (iter != Element.end())
 	{
 		// On ajoute tous les éléments d'un y du SI dans le LCA
 		insertInTheList(LCA, *iter);
@@ -132,7 +143,8 @@ void drawLine(int y, list<Node> L)
 	}
 }
 
-void OutLCA(int y, list<Node>& L)
+// Mise à jour du LCA
+void outLCA(int y, list<Node>& L)
 {
 	list<Node>::iterator iter = L.begin();
 	while (iter != L.end()) {
@@ -148,6 +160,7 @@ void OutLCA(int y, list<Node>& L)
 	}
 }
 
+// Réordonne les noeuds
 void resortLCA(list<Node>& L)
 {
 	Node n;
@@ -165,6 +178,7 @@ void resortLCA(list<Node>& L)
 //////////////////Fonction de filling
 void Fill(PointArray P, color c)
 {
+	// Définission des listes
 	SI _SI;
 	list<Node> LCA;
 
@@ -189,8 +203,11 @@ void Fill(PointArray P, color c)
 		buildLCA(LCA, _SI.SIList[yOfLine]);
 		if (!LCA.empty())
 		{
+			// Dessin du remplissage
 			drawLine(yOfLine, LCA);
-			OutLCA(yOfLine, LCA);
+			// Mise à jour du LCA
+			outLCA(yOfLine, LCA);
+			// On reordonne le LCA
 			resortLCA(LCA);
 		}
 	}
