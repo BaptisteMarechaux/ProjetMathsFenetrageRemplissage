@@ -1,9 +1,14 @@
 ﻿  Clipping.cpp
-c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\clipping.cpp(156): warning C4018: '<': signed/unsigned mismatch
-c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\clipping.cpp(164): warning C4018: '<': signed/unsigned mismatch
-c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\clipping.cpp(168): warning C4018: '<': signed/unsigned mismatch
-c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\clipping.cpp(169): warning C4018: '<': signed/unsigned mismatch
-c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\clipping.cpp(229): warning C4018: '<': signed/unsigned mismatch
-c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\clipping.cpp(240): warning C4018: '<': signed/unsigned mismatch
-c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\clipping.cpp(288): warning C4305: 'initializing': truncation from 'double' to 'float'
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\clipping.cpp(175): warning C4018: '<': signed/unsigned mismatch
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\clipping.cpp(180): warning C4018: '<': signed/unsigned mismatch
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\clipping.cpp(186): warning C4018: '<': signed/unsigned mismatch
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\clipping.cpp(187): warning C4018: '<': signed/unsigned mismatch
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\clipping.cpp(305): warning C4018: '<': signed/unsigned mismatch
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\clipping.cpp(317): warning C4018: '<': signed/unsigned mismatch
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\clipping.cpp(365): warning C4305: 'initializing': truncation from 'double' to 'float'
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\clipping.cpp(412): warning C4305: 'initializing': truncation from 'double' to 'float'
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\clipping.cpp(416): warning C4018: '<': signed/unsigned mismatch
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\clipping.cpp(486): warning C4018: '<': signed/unsigned mismatch
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\clipping.cpp(509): warning C4018: '<': signed/unsigned mismatch
+c:\users\baptiste\documents\github\projetmathsfenetrageremplissage\projetmathsfenetrageremplissage\clipping.cpp(511): warning C4018: '<': signed/unsigned mismatch
   ProjetMathsFenetrageRemplissage.vcxproj -> C:\Users\Baptiste\Documents\GitHub\ProjetMathsFenetrageRemplissage\Debug\ProjetMathsFenetrageRemplissage.exe

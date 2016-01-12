@@ -72,23 +72,47 @@ bool cuts(glm::vec2& checkedPointA, glm::vec2& checkedPointB, glm::vec2& windowP
 	else {
 		return false;
 	}
-	/*
-	if (res.x < 0)
+
+}
+
+bool strictCuts(glm::vec2& checkedPointA, glm::vec2& checkedPointB, glm::vec2& windowPointA, glm::vec2& windowPointB) {
+	//Retourne vrai si la droite prolongeant le coté de la fenêtre coupe un segment de la forme
+
+	glm::mat2 matrixD = glm::mat2(
+		checkedPointB.x - checkedPointA.x, checkedPointB.y - checkedPointA.y,
+		windowPointA.x - windowPointB.x, windowPointA.y - windowPointB.y
+		);
+
+	glm::vec2 c2 = glm::vec2(
+		windowPointA.x - checkedPointA.x, windowPointA.y - checkedPointA.y
+		);
+
+	float tempDeterminant = glm::determinant(matrixD);
+	glm::vec2 res = glm::vec2(0, 0);
+
+	if (tempDeterminant != 0) {
+
+		glm::inverse(matrixD);
+		res = glm::inverse(matrixD) * c2;
+	}
+	else {
+		//erreur
+
 		return false;
-	else if (res.x > 1)
-		return false;
-	else if (res.y < 0)
-		return false;
-	else if (res.y > 1)
-		return false;
-	else
+	}
+
+	//std::cout << "t : " << res.x << " s : " << res.y << std::endl;
+
+	if ((res.x > 0 && res.x < 1) && (res.y > 0 && res.y < 1)) {
 		return true;
-		*/
+	}
+	else {
+		return false;
+	}
 }
 
 glm::vec2 intersection(const glm::vec2& checkedPointA, const glm::vec2& checkedPointB, const glm::vec2& windowPointA, const glm::vec2& windowPointB) {
 
-	std::cout << "intersection" << std::endl;
 	/*
 	glm::mat2 matrixD = glm::mat2(
 	checkedPointB.x - checkedPointA.x, windowPointA.x - windowPointB.x,
@@ -114,28 +138,21 @@ glm::vec2 intersection(const glm::vec2& checkedPointA, const glm::vec2& checkedP
 	else {
 		//erreur
 
-		return checkedPointB;
+		return windowPointB;
 	}
 
 	//return res;
-
-	glm::vec2 bidule = windowPointA + (windowPointB - windowPointA)*res.y;
-	std::cout << "Resultat avec window" << std::endl;
-	std::cout << bidule.x << "," << bidule.y << std::endl;
-	bidule = checkedPointA + (checkedPointB - checkedPointA)*res.x;
-	std::cout << "Resultat avec shape " << std::endl;
-	std::cout << bidule.x << "," << bidule.y << std::endl;
 
 	if ((res.x >= 0 && res.x <= 1) || (res.y >= 0 && res.y <= 1)) {
 		return windowPointA + (windowPointB - windowPointA)*res.y;
 	}
 	else {
-		return  checkedPointB;
+		return  windowPointB;
 	}
 
 }
 
-std::vector<glm::vec2> maskInWindow(std::vector<glm::vec2>& s, std::vector<glm::vec2>& f) {
+std::vector<std::vector<glm::vec2>> maskInWindow(std::vector<glm::vec2>& s, std::vector<glm::vec2>& f) {
 	std::vector<glm::vec2> outShape; //polygone retourné
 	std::vector<glm::vec2> inShape; //polygone d'entrée temporaire
 
@@ -145,31 +162,94 @@ std::vector<glm::vec2> maskInWindow(std::vector<glm::vec2>& s, std::vector<glm::
 	glm::vec2 sIn; //point courant de la forme que l'on veut couper
 	glm::vec2 sLast; //dernier point de la forme que l'on veut couper
 
-	bool convex = false;
-
 	//On vérifie si le polygone est concave
 	//Si le polygone est concave on lance n(coté de f) - 2 fois la procédure de clipping
-	if (!isConvex(f)) {
-		auto vecList = std::vector< std::vector<glm::vec2> >();
-		auto winList = std::vector< std::vector<glm::vec2> >();
-		int k = 0;
-		for (int i = 2; i < f.size() - 2; i++) {
+	if (f.size() > 3) {
+		if (!isConvex(f)) {
+			auto vecList = std::vector< std::vector<glm::vec2> >();
+			auto winList = std::vector< std::vector<glm::vec2> >();
 
-			k++;
-		}
+			//O, découpe en triangle la winList
+			winList = triangulation(f);
 
-		for (int i = 0; i < winList.size(); i++) {
-			vecList.push_back( maskInWindow(s, winList[i]) );
-		}
+			int k = 0;
+			for (int i = 2; i < f.size() - 2; i++) {
 
-		for (int i = 0; i < vecList.size(); i++) {
-			for (int j = 0; j < vecList[i].size(); j++) {
-				if (!isInShape(vecList[i][j], outShape)) {
-					outShape.push_back(vecList[i][j]);
+				k++;
+			}
+
+			for (int i = 0; i < winList.size(); i++) {
+				//On ajoute chacun des polygones obtenus avec tous les clipping à une liste
+				if (winList.size() > 0) {
+					vecList.push_back(maskInWindow(s, winList[i]));
+				}
+				
+			}
+
+			/*
+			outShape = std::vector<glm::vec2>();
+			for (int i = 0; i < vecList.size(); i++) {
+				for (int j = 0; j < vecList[i].size(); j++) {
+					if (!isInShape(vecList[i][j], outShape)) {
+						outShape.push_back(vecList[i][j]);
+					}
 				}
 			}
+
+			
+			std::vector<glm::vec2> alreadyComputed;
+			float lowerAngle = 99999;
+			float lowerAngleIndex = 0;
+			float lowerDistance = 0;
+			for (int i = 0; i < outShape.size(); i++) {
+				if (outShape[i].y <= outShape[lowerDistance].y) {
+					if (outShape[i].y == outShape[lowerDistance].y) {
+						lowerDistance = outShape[i].x < outShape[lowerDistance].x ? i : lowerDistance;
+					}
+					else {
+						lowerDistance = i;
+					}
+				}
+			}
+
+			glm::vec2 curPoint = outShape[lowerDistance];
+			int curIndex = lowerDistance;
+
+			lowerDistance = 0;
+
+			while (alreadyComputed.size() < outShape.size()) {
+				alreadyComputed.push_back(curPoint);
+				for (int i = 0; i < outShape.size(); i++) {
+					if (isInShape(outShape[i], alreadyComputed))
+						continue;
+
+					auto a = glm::atan((1 - curPoint.x) / (outShape[i].y - curPoint.y));
+
+					if (a <= lowerAngle) {
+						if (a == lowerAngle) {
+
+						}
+						else {
+							lowerAngle = a;
+							lowerAngleIndex = i;
+						}
+						
+
+					}
+
+				}
+
+				
+				curPoint = outShape[lowerAngleIndex];
+
+			}
+			*/
+
+			return vecList;
 		}
 	}
+
+	
 
 	std::cout << "Points de la forme coupée :" << std::endl;
 
@@ -186,6 +266,9 @@ std::vector<glm::vec2> maskInWindow(std::vector<glm::vec2>& s, std::vector<glm::
 		f2 = f[i];
 		inShape = outShape;
 		outShape = std::vector<glm::vec2>();
+		if (inShape.size() == 0) {
+			break;
+		}
 		sLast = inShape[inShape.size() - 1];
 
 		for (unsigned int j = 0; j < inShape.size(); j++) {
@@ -197,6 +280,7 @@ std::vector<glm::vec2> maskInWindow(std::vector<glm::vec2>& s, std::vector<glm::
 					if (cuts(sIn, sLast, f1, f2))
 						outShape.push_back(intersection(sIn, sLast, f1, f2));
 				}
+
 				outShape.push_back(sIn);
 
 			}
@@ -218,8 +302,10 @@ std::vector<glm::vec2> maskInWindow(std::vector<glm::vec2>& s, std::vector<glm::
 		std::cout << "X : " << outShape[i].x << " Y : " << outShape[i].y << std::endl;
 	}
 	std::cout << std::endl;
-
-	return outShape;
+	
+	auto g = std::vector < std::vector<glm::vec2 >> ();
+	g.push_back(outShape);
+	return g;
 }
 
 bool isInShape(glm::vec2 p, std::vector<glm::vec2> shape) {
@@ -233,6 +319,7 @@ bool isInShape(glm::vec2 p, std::vector<glm::vec2> shape) {
 }
 
 bool isConvex(std::vector<glm::vec2> s) {
+	
 	float r=0;
 	for (int i = 0; i < s.size(); i++) {
 		if (i == 0) {
@@ -284,9 +371,132 @@ bool isConvex(std::vector<glm::vec2> s) {
 
 	float pii = 3.14159265358979323846;
 
-	if (r > 2 * pii ){
+
+	if (r != 2 * pii ){
+		std::cout << "Forme Concave" << std::endl;
+		std::cout << r << std::endl;
 		return false;
 	}
 
+	std::cout << "Forme Convexe" << std::endl;
+	std::cout << r << std::endl;
+
 	return true;
+}
+
+float vectorAngle(glm::vec2 c, glm::vec2 p1, glm::vec2 p2) {
+	return glm::acos(glm::dot(
+		p1 - c,
+		p2 - c
+		) /
+		(glm::distance(
+			p1,
+			c
+			) *
+			glm::distance(
+				p2,
+				c
+				)
+		)
+	);
+}
+
+bool isInsideTriangle(glm::vec2 cur, glm::vec2 prev, glm::vec2 next, std::vector<glm::vec2> v) {
+	float pii = 3.14159265358979323846;
+
+	
+
+	for (int j = 0; j < v.size(); j++) {
+		if (visible(v[j], cur, next) && visible(v[j], next, prev) && visible(v[j], prev, cur)) {
+			if (v[j] != cur && v[j] != next && v[j] != prev) {
+				return true;
+			}
+			
+		}
+	}
+
+	
+
+	return false;
+}
+
+std::vector<std::vector<glm::vec2> > triangulation(std::vector<glm::vec2>& v) {
+	glm::vec2 cur, prev, next;
+
+	std::vector<std::vector<glm::vec2>> newTriangleList;
+
+	std::vector<glm::vec2> newTriangle;
+
+	std::vector<glm::vec2> newV = v;
+
+	int leftPoints = v.size();
+
+	int i = 0;
+
+	newTriangle = std::vector<glm::vec2>();
+
+	while (leftPoints > 3) {
+
+		cur = newV[i];
+		if (i == 0) {
+			prev = newV[newV.size() - 1];
+			next = newV[i + 1];
+		}
+		else if (i == newV.size() - 1) {
+			prev = newV[newV.size() - 2];
+			next = newV[0];
+		}
+		else {
+			prev = newV[i - 1];
+			next = newV[i + 1];
+		}
+
+		if (isInsideTriangle(cur, prev, next, newV)) {
+			i++;
+		}
+		else {
+			leftPoints -= 1;
+			newTriangle.push_back(cur);
+			newTriangle.push_back(next);
+			newTriangle.push_back(prev);
+
+			newTriangleList.push_back(newTriangle);
+
+			newTriangle.clear();
+
+			v.clear();
+
+			for (int k = 0; k < newV.size(); k++) {
+				if (k!=i) {
+					v.push_back(newV[k]);
+				}
+				
+			}
+			newV = v;
+
+			i = 0;
+		}
+
+	}
+
+	if (leftPoints == 3) {
+		newTriangle.push_back(newV[0]);
+		newTriangle.push_back(newV[1]);
+		newTriangle.push_back(newV[2]);
+
+		newTriangleList.push_back(newTriangle);
+	}
+
+	std::cout << "Nombre de triangles : " << newTriangleList.size() << std::endl;
+
+	for (int i = 0; i < newTriangleList.size(); i++) {
+		std::cout << "Triangle" << std::endl;
+		for (int j = 0; j < newTriangleList[i].size(); j++) {
+			std::cout << " x : " << newTriangleList[i][j].x << " y : " << newTriangleList[i][j].y << std::endl;
+		}
+		std::cout << std::endl;
+		
+	}
+
+	return newTriangleList;
 }

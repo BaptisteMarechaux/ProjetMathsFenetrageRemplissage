@@ -24,25 +24,34 @@
 int main(int argc, char* argv[])
 {
 	int j(0);
+	
 	std::vector<glm::vec2> s = std::vector<glm::vec2>();
 	std::vector<glm::vec2> f = std::vector<glm::vec2>();
 
-	s.push_back(glm::vec2(0, 4));
-	s.push_back(glm::vec2(0, 7));
-	s.push_back(glm::vec2(5, 7));
-	s.push_back(glm::vec2(5, 4));
+	f.push_back(glm::vec2(167, 153));
+	f.push_back(glm::vec2(275, 490));
+	f.push_back(glm::vec2(527, 517));
+	f.push_back(glm::vec2(630, 363));
+	f.push_back(glm::vec2(400, 307));
+	f.push_back(glm::vec2(481, 198));
+	f.push_back(glm::vec2(367, 79));
 
-	f.push_back(glm::vec2(1, 1));
-	f.push_back(glm::vec2(1, 5));
-	f.push_back(glm::vec2(4, 5));
-	f.push_back(glm::vec2(4, 1));
+	s.push_back(glm::vec2(282, 89));
+	s.push_back(glm::vec2(293, 248));
+	s.push_back(glm::vec2(352, 406));
+	s.push_back(glm::vec2(480, 406));
+	s.push_back(glm::vec2(530, 277));
+	s.push_back(glm::vec2(487, 139));
 
-	s = maskInWindow(s, f);
+	//auto truc = triangulation(s);
+
+	//s = maskInWindow(s, f);
+
+	bool a = isConvex( s);
 
 	//auto t = intersection(glm::vec2(0, 0), glm::vec2(3, 0), glm::vec2(1, -1), glm::vec2(1, 1));
 
 	//On est censé obtenir le point d'intersection suivant : (1, 0)
-
 
 	//std::cin >> j;
 
@@ -56,7 +65,6 @@ int main(int argc, char* argv[])
 	glutInitWindowSize(800, 600);
 	glutInitWindowPosition(100, 100);
 	_CreateWindow();
-
 
 	glutDisplayFunc(Render);
 	// glutReshapeFunc(myReshape);
