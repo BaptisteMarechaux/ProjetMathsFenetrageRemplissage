@@ -181,9 +181,11 @@ std::vector<std::vector<glm::vec2>> maskInWindow(std::vector<glm::vec2>& s, std:
 			for (int i = 0; i < winList.size(); i++) {
 				//On ajoute chacun des polygones obtenus avec tous les clipping à une liste
 				if (winList.size() > 0) {
-					vecList.push_back(maskInWindow(s, winList[i]));
+
+					vecList.push_back(maskInWindow(s, winList[i])[0]); 
+
 				}
-				
+
 			}
 
 			/*

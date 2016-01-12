@@ -255,15 +255,17 @@ void Render()
 	if (clipPoly) {
 		// Dessin du polygon clippé
 		glColor3f(1.0f, 0.0f, 1.0f);
-		glBegin(GL_LINE_LOOP);
+		
 		// On relie tout les points de la forme clippée
 		for (int cp = 0; cp < clippedPoly.size(); cp++)
 		{
+			glBegin(GL_LINE_LOOP);
 			for (int i = 0; i < clippedPoly[cp].points.size(); i++) {
-				glVertex2i(clippedPoly[cp].points[i].x, clippedPoly[cp].points[i].y);
+				glVertex2i(clippedPoly[cp].points[i].x, clippedPoly[cp].points[i].y);//////////////////////////////////////////////
 			}
+			glEnd();
 		}
-		glEnd();
+		
 
 		// Coloriage de la forme en fonction de la couleur choisie
 		if (fillPoly) {
@@ -395,7 +397,7 @@ void mouseMotion(int x, int y) {
 void UpdateClipping(PointArray poly) {
 	std::vector<glm::vec2> s = std::vector<glm::vec2>();
 	std::vector<glm::vec2> f = std::vector<glm::vec2>();
-	std::vector<PointArray> r = std::vector<PointArray>();
+	auto r = std::vector<std::vector<glm::vec2>>();
 
 	for (unsigned int i = 0; i < poly.points.size(); i++) {
 		s.push_back(glm::vec2(poly.points[i].x, poly.points[i].y)); //filling shape array
@@ -404,21 +406,24 @@ void UpdateClipping(PointArray poly) {
 		f.push_back(glm::vec2(win.points[i].x, win.points[i].y)); //filling windowarray
 	}
 
-	//r = maskInWindow(s, f);
-	
-	/*_Point tmpPoint;
+	r = maskInWindow(s, f);
 
-	PointArray tmpPointArray;
-	tmpPointArray.points = std::vector<_Point>();
+	for (int j = 0; j < r.size(); j++) {
+		_Point tmpPoint;
 
-	for (int i = 0; i < s.size(); i++) {
-		tmpPoint.x = s[i].x;
-		tmpPoint.y = s[i].y;
-		tmpPointArray.points.push_back(tmpPoint);
-		//glVertex2i(s[i].x, s[i].y);
-	}*/
+		PointArray tmpPointArray;
+		tmpPointArray.points = std::vector<_Point>();
+		for (int i = 0; i < r[j].size(); i++) {
+			tmpPoint.x = r[j][i].x;
+			tmpPoint.y = r[j][i].y;
+			tmpPointArray.points.push_back(tmpPoint);
+			//glVertex2i(s[i].x, s[i].y);
+			
+		}
+		clippedPoly.push_back(tmpPointArray);
+	}
 	for (int i = 0; i < r.size(); i++) {
-		clippedPoly.push_back(r[i]);
+		
 	}
 }
 
