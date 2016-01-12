@@ -6,7 +6,7 @@
 #include <vector>
 using namespace std;
 
-typedef GLfloat colorType[3];
+typedef GLfloat color[3];
 
 struct _Point
 {
@@ -19,7 +19,7 @@ public:
 	vector<_Point> points;
 };
 
-void Fill(PointArray P, colorType c);
+void Fill(PointArray P, color c);
 
 void FillCircle(GLfloat centerX, GLfloat centerY, GLfloat radius);
 
