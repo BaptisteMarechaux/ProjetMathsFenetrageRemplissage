@@ -285,7 +285,7 @@ void Render()
 	if (clipPoly) {
 
 		glColor3f(1.0f, 0.0f, 1.0f);
-		glBegin(GL_LINE_STRIP);
+		glBegin(GL_LINE_LOOP);
 		for (int i = 0; i < clippedPoly.points.size(); i++) {
 			glVertex2i(clippedPoly.points[i].x, clippedPoly.points[i].y);
 		}
@@ -382,6 +382,8 @@ void processMenuEvents(int option) {
 		for (unsigned int i = 0; i < win.points.size(); i++) {
 			f.push_back(glm::vec2(win.points[i].x, win.points[i].y)); //filling windowarray
 		}
+
+		mode = 56;
 		
 		s = maskInWindow(s, f);
 
